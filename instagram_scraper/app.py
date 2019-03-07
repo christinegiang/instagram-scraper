@@ -643,6 +643,46 @@ class InstagramScraper(object):
                 future = executor.submit(self.worker_wrapper, self.download, item, dst)
                 future_to_item[future] = item
 
+    def get_profile_info(self, dst, username):
+        if self.profile_metadata is False:
+            return
+        url = USER_URL.format(username)
+        resp = self.get_json(url)
+
+        if resp is None:
+            self.logger.error('Error getting user info for {0}'.format(username))
+            return
+
+        self.logger.info( 'Saving metadata general information on {0}.json'.format(username) )
+
+        user_info = json.loads(resp)['graphql']['user']
+
+        try:
+            profile_info = {
+                'biography': user_info['biography'],
+                'followers_count': user_info['edge_followed_by']['count'],
+                'following_count': user_info['edge_follow']['count'],
+                'full_name': user_info['full_name'],
+                'id': user_info['id'],
+                'is_business_account': user_info['is_business_account'],
+                'is_joined_recently': user_info['is_joined_recently'],
+                'is_private': user_info['is_private'],
+                'posts_count': user_info['edge_owner_to_timeline_media']['count'],
+                'profile_pic_url': user_info['profile_pic_url']
+            }
+        except (KeyError, IndexError, StopIteration):
+            self.logger.warning('Failed to build {0} profile info'.format(username))
+            return
+
+        item = {
+            'GraphProfileInfo': {
+                'info': profile_info,
+                'username': username,
+                'created_time': 1286323200
+            }
+        }
+        self.save_json(item, '{0}/{1}.json'.format(dst, username))
+
     def get_stories(self, dst, executor, future_to_item, user, username):
         """Scrapes the user's stories."""
         if self.logged_in and \
