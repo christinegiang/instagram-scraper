@@ -443,7 +443,7 @@ class InstagramScraper(object):
                     self.set_last_scraped_timestamp(value, greatest_timestamp)
 
                 if (self.media_metadata or self.comments or self.include_location) and self.posts:
-                    self.save_json(self.posts, '{0}/{1}.json'.format(dst, value))
+                    self.save_json({ 'GraphImages': self.posts }, '{0}/{1}.json'.format(dst, value))
         finally:
             self.quit = True
 
@@ -602,7 +602,7 @@ class InstagramScraper(object):
                         self.set_last_scraped_timestamp(username, greatest_timestamp)
 
                     if (self.media_metadata or self.comments or self.include_location) and self.posts:
-                        self.save_json(self.posts, '{0}/{1}.json'.format(dst, username))
+                        self.save_json({ 'GraphImages': self.posts }, '{0}/{1}.json'.format(dst, username))
                 except ValueError:
                     self.logger.error("Unable to scrape user - %s" % username)
         finally:
