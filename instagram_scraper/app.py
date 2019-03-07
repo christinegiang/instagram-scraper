@@ -1082,8 +1082,14 @@ class InstagramScraper(object):
             os.makedirs(os.path.dirname(dst))
             
         if data:
+            output_list = {}
+            if os.path.exists(dst):
+                with open(dst, "rb") as f:
+                    output_list.update(json.load(f))
+
             with open(dst, 'wb') as f:
-                json.dump(data, codecs.getwriter('utf-8')(f), indent=4, sort_keys=True, ensure_ascii=False)
+                output_list.update(data)
+                json.dump(output_list, codecs.getwriter('utf-8')(f), indent=4, sort_keys=True, ensure_ascii=False)
 
     @staticmethod
     def get_logger(level=logging.DEBUG, verbose=0):
