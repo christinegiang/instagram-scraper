@@ -83,7 +83,7 @@ class InstagramScraper(object):
         default_attr = dict(username='', usernames=[], filename=None,
                             login_user=None, login_pass=None,
                             destination='./', retain_username=False, interactive=False,
-                            quiet=False, maximum=0, media_metadata=False, latest=False,
+                            quiet=False, maximum=0, media_metadata=False, profile_metadata=False, latest=False,
                             latest_stamps=False, cookiejar=None,
                             media_types=['image', 'video', 'story-image', 'story-video'],
                             tag=False, location=False, search_location=False, comments=False,
@@ -1168,6 +1168,8 @@ def main():
                         help='Creates username subdirectory when destination flag is set')
     parser.add_argument('--media-metadata', '--media_metadata', action='store_true', default=False,
                         help='Save media metadata to json file')
+    parser.add_argument('--profile-metadata', '--profile_metadata', action='store_true', default=False,
+                        help='Save profile metadata to json file')
     parser.add_argument('--include-location', '--include_location', action='store_true', default=False,
                         help='Include location data when saving media metadata')
     parser.add_argument('--media-types', '--media_types', '-t', nargs='+', default=['image', 'video', 'story'],
